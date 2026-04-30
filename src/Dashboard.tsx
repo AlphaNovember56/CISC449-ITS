@@ -3,11 +3,11 @@ import './Dashboard.css';
 import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Module } from './types';
-import { sampleModules } from './data';
+import { module1Data } from './components/Module1/module1-questions';
 import ProgressBarComponent from './components/ProgressBarComponent';
 
 function Dashboard() {
-  const [modules, setModules] = useState<Module[]>(sampleModules);
+  const [modules, setModules] = useState<Module[]>([module1Data]);
   const navigate = useNavigate();
 
   useEffect(() => {
