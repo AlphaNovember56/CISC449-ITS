@@ -1,0 +1,100 @@
+/* Section.css */
+
+.section-container {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.section-card {
+  max-width: 900px;
+  margin: 0 auto;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  background: white;
+  overflow: hidden;
+}
+
+.locked-section-card {
+  max-width: 600px;
+  margin: 2rem auto 0;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.locked-section-card .card-body {
+  padding: 3rem 2rem;
+}
+
+.lock-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.section-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 2rem;
+}
+
+.section-header h3 {
+  margin: 0 0 0.5rem 0;
+  font-weight: bold;
+}
+
+.section-description {
+  margin: 0;
+  opacity: 0.9;
+  font-size: 1rem;
+}
+
+.section-card .card-body {
+  padding: 2rem;
+}
+
+.section-content {
+  margin: 1.5rem 0;
+}
+
+.section-footer {
+  padding: 1.5rem 2rem;
+  background-color: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.button-group button {
+  flex: 1;
+  min-width: 150px;
+}
+
+@media (max-width: 768px) {
+  .section-container {
+    padding: 1rem;
+  }
+
+  .section-header {
+    padding: 1.5rem;
+  }
+
+  .section-card .card-body {
+    padding: 1.5rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group button {
+    width: 100%;
+    min-width: auto;
+  }
+}
