@@ -97,9 +97,15 @@ const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
               className={`section-overview-card ${
                 section.isLocked ? 'locked' : 'unlocked'
               }`}
-              onClick={() =>
-                !section.isLocked
-              }
+              onClick={() => {
+                if (!section.isLocked) {
+                  if (section.id === 1) {
+                    navigate('/module/1/pretest1');
+                  } else {
+                    navigate(`/module/1/section/${section.id}`);
+                  }
+                }
+              }}
             >
               <Card.Body>
                 <div className="section-header-overview">
@@ -127,9 +133,16 @@ const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
                     variant="primary"
                     size="sm"
                     className="w-100 mt-2"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
+                    onClick={() => {
+                    if (!section.isLocked) {
+                    if (section.id === 1) {
+                     navigate('/module/1/pretest1');
+                  } else {
+                    navigate(`/module/1/section/${section.id}`);
+                      }
+                    }
+                  }
+                }
                   >
                     {section.progress === 0 ? 'Start' : 'Continue'}
                   </Button>
