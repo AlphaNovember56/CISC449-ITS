@@ -2,6 +2,7 @@
 
 export interface PretestResult {
   score: number;
+  correctAnswers: number; // Number of correct answers for Performance Factor analysis
   timestamp: Date;
   unlockedSections: number[]; // IDs of sections unlocked based on pretest score
 }
@@ -35,6 +36,13 @@ export interface UserProgress {
   progress: number; // 0-100
   completed: boolean;
   timestamp: Date;
+}
+
+export interface PerformanceFactor {
+  initialBeta: number; // 0.1 * number of correct answers from pretest
+  currentBeta: number; // Current performance factor (adjusted based on performance)
+  totalAttempts: number;
+  successfulAttempts: number;
 }
 
 export interface PretestQuestion {
