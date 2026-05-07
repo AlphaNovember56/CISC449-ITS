@@ -30,16 +30,11 @@ const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
     }
   }, [module, onUpdateModule]);
 
-
   const handleSectionComplete = (sectionId: number) => {
     const updatedModule = { ...module };
     updatedModule.sections = updatedModule.sections.map((section) => {
       if (section.id === sectionId) {
         return { ...section, progress: 100 };
-      }
-      // If this is the pretest (section 1), unlock the next section (section 2)
-      if (sectionId === 1 && section.id === 2) {
-        return { ...section, isLocked: false };
       }
       return section;
     });
@@ -58,19 +53,23 @@ const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
   return (
     <div className="module-overview-container">
       <Button
-        onClick={() => navigate('/')}
-        className="back-button"
-      >
-        ← Back to Dashboard
-      </Button>
-
+              onClick={() => navigate('/')}
+              className="back-button"
+              size="sm"
+            >
+              ← Back to Dashboard
+            </Button>
       <Card className="module-overview-header">
+        
         <Card.Body>
-          <div className="module-title-section">
-            <h1>
-              {module.icon} {module.title}
-            </h1>
-            <p className="module-description">{module.description}</p>
+          <div className="module-header-top">
+            <div className="module-title-section">
+              <h1>
+                {module.icon} {module.title}
+              </h1>
+              <p className="module-description">{module.description}</p>
+            </div>
+            
           </div>
           <div className="module-stats">
             <ProgressBarComponent
@@ -94,59 +93,41 @@ const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
         {module.sections.map((section) => (
           <Col md={6} lg={4} key={section.id} className="section-card-col">
             <Card
-              className={`section-overview-card ${
-                section.isLocked ? 'locked' : 'unlocked'
-              }`}
+              className="section-overview-card unlocked"
               onClick={() => {
-                if (!section.isLocked) {
-                  if (section.id === 1) {
-                    navigate('/module/1/pretest1');
-                  } else {
-                    navigate(`/module/1/section/${section.id}`);
-                  }
+                if (section.id === 1) {
+                  navigate('/module/1/pretest1');
+                } else {
+                  navigate(`/module/1/section/${section.id}`);
                 }
               }}
             >
               <Card.Body>
                 <div className="section-header-overview">
-                  <div className="section-icon">
-                    {section.isLocked ? '🔒' : '🔓'}
-                  </div>
                   <h5 className="section-name">{section.title}</h5>
                 </div>
                 <p className="section-desc-small">{section.description}</p>
 
-                {section.isLocked && (
-                  <Alert variant="warning" className="lock-message">
-                    Locked
-                  </Alert>
-                )}
-
                 <ProgressBarComponent
                   progress={section.progress}
-                  variant={section.isLocked ? 'warning' : 'info'}
+                  variant="info"
                   size="sm"
                 />
 
-                {!section.isLocked && (
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    className="w-100 mt-2"
-                    onClick={() => {
-                    if (!section.isLocked) {
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="w-100 mt-2"
+                  onClick={() => {
                     if (section.id === 1) {
-                     navigate('/module/1/pretest1');
-                  } else {
-                    navigate(`/module/1/section/${section.id}`);
-                      }
+                      navigate('/module/1/pretest1');
+                    } else {
+                      navigate(`/module/1/section/${section.id}`);
                     }
-                  }
-                }
-                  >
-                    {section.progress === 0 ? 'Start' : 'Continue'}
-                  </Button>
-                )}
+                  }}
+                >
+                  {section.progress === 0 ? 'Start' : 'Continue'}
+                </Button>
               </Card.Body>
             </Card>
           </Col>

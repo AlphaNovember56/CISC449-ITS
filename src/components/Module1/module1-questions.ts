@@ -1,8 +1,8 @@
 // Module 1: Events in JavaScript - Focused Questions Data
-import { Module, PretestQuestion } from '../../types';
+import { Module, Question } from '../../types';
 
 // Module 1 Pretest Questions
-const module1PretestQuestions: PretestQuestion[] = [
+const module1PretestQuestions: Question[] = [
   {
     id: 1,
     question: 'What is an event in JavaScript?',
@@ -61,7 +61,7 @@ const module1PretestQuestions: PretestQuestion[] = [
 ];
 
 // Section 1.1: Events - Conceptual (Easiest Level - Basic Understanding)
-const section1_1Questions: PretestQuestion[] = [
+const section1_1Questions: Question[] = [
   {
     id: 1,
     question: 'Which of the following best describes an event object?',

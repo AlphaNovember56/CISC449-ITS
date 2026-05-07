@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { Button, Card, Alert, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { PretestQuestion } from '../../types';
-import { module1PretestQuestions } from './module1-questions';
+import { Question } from '../../types';
 import '../styles/Pretest.css';
 
 interface Pretest1Props {
   module1: number;
-  questions: PretestQuestion[];
-  onComplete: (score: number, correctAnswers: number, unlockedSectionIds: number[]) => void;
+  questions: Question[];
+  onComplete: (score: number, correctAnswers: number) => void;
 }
 
 export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
@@ -45,10 +44,24 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
       setAnswered(false);
       setIsCorrect(false);
     } else {
-      // Pretest is complete
-      const unlockedSectionIds = [2]; // Example: unlock section 2
-      onComplete(score, correctAnswerCount, unlockedSectionIds);
-      navigate(`/module/${module1}`);
+      // Pretest is complete - persist data before navigation
+      const correctAnswersString = correctAnswerCount.toString();
+      
+      // Set all relevant localStorage items
+      localStorage.setItem('pretest-completed', 'true');
+      localStorage.setItem('pretest-correct-answers', correctAnswersString);
+      localStorage.setItem('pretest-score', score.toString());
+      
+      // Call the completion handler
+      onComplete(score, correctAnswerCount);
+      
+      // Log for debugging
+      console.log(`Pretest complete - Stored ${correctAnswerCount} correct answers to localStorage`);
+      
+      // Navigate after a short delay to ensure data is persisted
+      setTimeout(() => {
+        navigate(`/module/${module1}`);
+      }, 100);
     }
   };
 
@@ -74,7 +87,7 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
                 style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
               ></div>
             </div>
-            <p className="progress-score">Progress: {score} / {currentQuestionIndex + 1} correct</p>
+            <p className="progress-score">Progress: {score} /5 </p>
           </div>
         </div>
       </header>
@@ -128,14 +141,7 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
                     </div>
                   )}
                 </Alert>
-              )}
-
-              {/* Placeholder for performance message */}
-              <div className="pretest-info mt-3">
-                <p className="text-muted small">
-                  Your performance on this pretest will determine your initial learning difficulty adjustment (Beta = 0.1 × correct answers).
-                </p>
-              </div>
+              )}              
             </div>
 
             <div className="pretest-controls mt-4">

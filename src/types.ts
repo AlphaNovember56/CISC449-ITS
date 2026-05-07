@@ -15,7 +15,7 @@ export interface Section {
   progress: number; // 0-100
   pretestRequired: boolean;
   content: string; // URL or content identifier
-  questions?: PretestQuestion[]; // Section-specific quiz questions
+  questions?: Question[]; // Section-specific quiz questions
 }
 
 export interface Module {
@@ -27,7 +27,7 @@ export interface Module {
   overallProgress: number; // 0-100
   pretestResult?: PretestResult;
   isStarted: boolean;
-  pretestQuestions?: PretestQuestion[]; // Module-specific pretest questions
+  pretestQuestions?: Question[]; // Module-specific pretest questions
 }
 
 export interface UserProgress {
@@ -45,7 +45,7 @@ export interface PerformanceFactor {
   successfulAttempts: number;
 }
 
-export interface PretestQuestion {
+export interface Question {
   id: number;
   question: string;
   options: string[];
