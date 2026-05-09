@@ -58,8 +58,8 @@ export function Section1Part1({ moduleId, questions, pretestCorrectAnswers, onSe
     }
     
     // Calculate initial beta: -2.5 base + 0.6 per correct pretest answer
-    // At 0 correct: -2.5 → ~8% probability
-    // At 9 correct: 2.9 → ~95% probability
+    // At 0 correct: ~9% probability
+    // At 5 correct: ~55% probability
     const initialBetaValue = -2.3 + (0.5 * correctAnswersValue);
     const gammaValue = 0.2;
     const rhoValue = 0.1;
