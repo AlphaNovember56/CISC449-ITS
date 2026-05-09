@@ -39,29 +39,30 @@ export function Section1Part1({ moduleId, questions, pretestCorrectAnswers, onSe
     gammaValue: number,
     rhoValue: number
   ): number => {
-    // P(success) = initialBeta + (correctAnswers * gamma) + (incorrectAnswers * rho)
-    const probability = initialBetaValue + (correctAnswerCount * gammaValue) + (incorrectAnswerCount * rhoValue);
+    // m = initialBeta + (correctAnswers * gamma) + (incorrectAnswers * rho)
+    const m = initialBetaValue + (correctAnswerCount * gammaValue) + (incorrectAnswerCount * rhoValue);
+    const probability = 1 / (1 + Math.exp(-m));
     // Cap at 1.0 and ensure non-negative
-    return Math.max(0, Math.min(1, probability));
+    return probability > 1 ? 1 : probability < 0 ? 0 : probability;
   };
 
   // Initialize performance factor based on pretest performance
   useEffect(() => {
-    // Use prop if available, otherwise fallback to localStorage
-    let correctAnswersValue = pretestCorrectAnswers;
+    // Primary source: localStorage (always check first for latest data)
+    const pretestCorrectAnswersString = localStorage.getItem('pretest-correct-answers');
+    let correctAnswersValue = pretestCorrectAnswersString ? parseInt(pretestCorrectAnswersString, 10) : 0;
     
-    if (correctAnswersValue === null) {
-      // Fallback to localStorage
-      const pretestCorrectAnswersString = localStorage.getItem('pretest-correct-answers');
-      correctAnswersValue = pretestCorrectAnswersString ? parseInt(pretestCorrectAnswersString, 10) : 0;
+    // Fallback to prop if localStorage is empty
+    if (correctAnswersValue === 0 && pretestCorrectAnswers !== null) {
+      correctAnswersValue = pretestCorrectAnswers;
     }
     
-    // Ensure localStorage is set for persistence
-    localStorage.setItem('pretest-correct-answers', correctAnswersValue.toString());
-    
-    const initialBetaValue = 0.01 + (0.1 * correctAnswersValue);
-    const gammaValue = 0.15;
-    const rhoValue = 0.075;
+    // Calculate initial beta: -2.5 base + 0.6 per correct pretest answer
+    // At 0 correct: -2.5 → ~8% probability
+    // At 9 correct: 2.9 → ~95% probability
+    const initialBetaValue = -2.3 + (0.5 * correctAnswersValue);
+    const gammaValue = 0.2;
+    const rhoValue = 0.1;
     const initialProbability = calculateProbabilityOfSuccess(initialBetaValue, 0, 0, gammaValue, rhoValue);
 
     setPerformanceFactorParams({
@@ -72,10 +73,26 @@ export function Section1Part1({ moduleId, questions, pretestCorrectAnswers, onSe
       probabilityOfSuccess: initialProbability,
     });
 
-    console.log(`Section 1.1 initialized with ${correctAnswersValue} correct pretest answers. Initial Beta: ${initialBetaValue}, Initial Probability: ${initialProbability}`);
+    console.log(`Section 1.1 initialized with ${correctAnswersValue} correct pretest answers from localStorage. Initial Beta: ${initialBetaValue}, Initial Probability: ${initialProbability}`);
   }, [pretestCorrectAnswers]);
 
   const currentQuestion = questions[currentQuestionIndex];
+
+  // Utility function to clear localStorage for testing
+  const clearSection1_1LocalStorage = () => {
+    localStorage.removeItem('section-1-1-completed');
+    localStorage.removeItem('section-1-1-score');
+    localStorage.removeItem('section-1-1-attempts');
+    console.log('Section 1.1 localStorage cleared');
+  };
+
+  // Expose clear function to window for quick console testing
+  React.useEffect(() => {
+    (window as any).clearSection1_1Storage = clearSection1_1LocalStorage;
+    return () => {
+      delete (window as any).clearSection1_1Storage;
+    };
+  }, []);
 
   const handleOptionSelect = (optionIndex: number) => {
     if (answered) return;
@@ -252,9 +269,19 @@ export function Section1Part1({ moduleId, questions, pretestCorrectAnswers, onSe
       {/* Header Section */}
       <header className="pretest-header">
         <div className="header-content">
-          <button onClick={() => void navigate(`/module/${moduleId}`)} className="back-button">
-            ← Back to Module Overview
-          </button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button onClick={() => void navigate(`/module/${moduleId}`)} className="back-button">
+              ← Back to Module Overview
+            </button>
+            <button 
+              onClick={clearSection1_1LocalStorage} 
+              className="back-button"
+              style={{ backgroundColor: '#dc3545', fontSize: '0.875rem' }}
+              title="Clear localStorage for testing"
+            >
+              🧹 Clear Storage
+            </button>
+          </div>
           <div className="header-top">
             <h1 className="header-title">Section 1.1 Quiz</h1>
           </div>

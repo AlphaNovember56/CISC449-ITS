@@ -97,7 +97,9 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
               <button onClick={() => void navigate('/module/1')} className="back-button">
                 ← Back to Module Overview
               </button>
-              {/* Debug button to clear localStorage for testing purposes - can be removed in production */}
+
+              
+              {/* Debug button to clear localStorage for testing purposes*/}
               {/* <button 
                 onClick={clearPretestLocalStorage} 
                 className="back-button"
@@ -106,6 +108,8 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
               >
                 🧹 Clear Storage
               </button> */}
+
+
             </div>
           <div className="header-top">
             
