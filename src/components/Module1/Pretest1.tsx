@@ -21,6 +21,21 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
 
   const currentQuestion = questions[currentQuestionIndex];
 
+  // debugging function to clear localStorage for testing
+  const clearPretestLocalStorage = () => {
+    localStorage.removeItem('pretest-completed');
+    localStorage.removeItem('pretest-correct-answers');
+    localStorage.removeItem('pretest-score');
+    console.log('Pretest localStorage cleared');
+  };
+  React.useEffect(() => {
+    (window as any).clearPretestStorage = clearPretestLocalStorage;
+    return () => {
+      delete (window as any).clearPretestStorage;
+    };
+  }, []);
+
+
   const handleOptionSelect = (optionIndex: number) => {
     if (answered) return; // Prevent changing answer after submission
 
@@ -44,19 +59,25 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
       setAnswered(false);
       setIsCorrect(false);
     } else {
-      // Pretest is complete - persist data before navigation
-      const correctAnswersString = correctAnswerCount.toString();
+      // Pretest is complete - calculate final score based on current state
+      const finalCorrectCount = correctAnswerCount;
+      const finalScore =  score;
       
       // Set all relevant localStorage items
       localStorage.setItem('pretest-completed', 'true');
-      localStorage.setItem('pretest-correct-answers', correctAnswersString);
-      localStorage.setItem('pretest-score', score.toString());
+      localStorage.setItem('pretest-correct-answers', finalCorrectCount.toString());
+      localStorage.setItem('pretest-score', finalScore.toString());
       
-      // Call the completion handler
-      onComplete(score, correctAnswerCount);
+      // Call the completion handler with final values
+      onComplete(finalScore, finalCorrectCount);
       
       // Log for debugging
-      console.log(`Pretest complete - Stored ${correctAnswerCount} correct answers to localStorage`);
+      console.log(`Pretest complete - Stored ${finalCorrectCount} correct answers to localStorage`);
+      console.log(`localStorage values:`, {
+        'pretest-completed': localStorage.getItem('pretest-completed'),
+        'pretest-correct-answers': localStorage.getItem('pretest-correct-answers'),
+        'pretest-score': localStorage.getItem('pretest-score')
+      });
       
       // Navigate after a short delay to ensure data is persisted
       setTimeout(() => {
@@ -72,9 +93,20 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
       {/* Header Section */}
       <header className="pretest-header">
         <div className="header-content">
-            <button onClick={() => void navigate('/module/1')} className="back-button">
-              ← Back to Module Overview
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => void navigate('/module/1')} className="back-button">
+                ← Back to Module Overview
+              </button>
+              {/* Debug button to clear localStorage for testing purposes - can be removed in production */}
+              {/* <button 
+                onClick={clearPretestLocalStorage} 
+                className="back-button"
+                style={{ backgroundColor: '#dc3545', fontSize: '0.875rem' }}
+                title="Clear localStorage for testing"
+              >
+                🧹 Clear Storage
+              </button> */}
+            </div>
           <div className="header-top">
             
             <h1 className="header-title">Module Pretest</h1>
@@ -87,7 +119,6 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
                 style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
               ></div>
             </div>
-            <p className="progress-score">Progress: {score} /5 </p>
           </div>
         </div>
       </header>
