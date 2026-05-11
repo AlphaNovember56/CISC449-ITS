@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Button, Row, Col } from 'react-bootstrap';
 import { Module } from '../../types';
@@ -30,32 +30,34 @@ export const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
     }
   }, [module, onUpdateModule]);
 
+  const handleSectionComplete = useCallback((sectionId: number) => {
+    setModule((prevModule) => {
+      const updatedModule = { ...prevModule };
+      updatedModule.sections = updatedModule.sections.map((section) => {
+        if (section.id === sectionId) {
+          return { ...section, progress: 100 };
+        }
+        return section;
+      });
+
+      // Calculate overall progress
+      const totalProgress =
+        updatedModule.sections.reduce((sum, s) => sum + s.progress, 0) /
+        updatedModule.sections.length;
+      updatedModule.overallProgress = Math.round(totalProgress);
+      updatedModule.isStarted = true;
+
+      return updatedModule;
+    });
+  }, []);
+
   // Check if pretest section needs to be marked complete
   useEffect(() => {
     if (localStorage.getItem('pretest1-section-complete') === 'true') {
       handleSectionComplete(1);
       localStorage.removeItem('pretest1-section-complete');
     }
-  }, []);
-
-  const handleSectionComplete = (sectionId: number) => {
-    const updatedModule = { ...module };
-    updatedModule.sections = updatedModule.sections.map((section) => {
-      if (section.id === sectionId) {
-        return { ...section, progress: 100 };
-      }
-      return section;
-    });
-
-    // Calculate overall progress
-    const totalProgress =
-      updatedModule.sections.reduce((sum, s) => sum + s.progress, 0) /
-      updatedModule.sections.length;
-    updatedModule.overallProgress = Math.round(totalProgress);
-    updatedModule.isStarted = true;
-
-    setModule(updatedModule);
-  };
+  }, [handleSectionComplete]);
     
 
   return (
