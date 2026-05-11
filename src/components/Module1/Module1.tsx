@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Button, Row, Col, Alert } from 'react-bootstrap';
+import { Card, Button, Row, Col } from 'react-bootstrap';
 import { Module } from '../../types';
 import ProgressBarComponent from '../ProgressBarComponent';
 import { module1Data } from './module1-questions';
@@ -10,7 +10,7 @@ interface Module1Props {
   onUpdateModule?: (updatedModule: Module) => void;
 }
 
-const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
+export const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
   const navigate = useNavigate();
   const [module, setModule] = useState<Module>(JSON.parse(JSON.stringify(module1Data)));
 
@@ -29,6 +29,14 @@ const Module1: React.FC<Module1Props> = ({ onUpdateModule }) => {
       onUpdateModule(module);
     }
   }, [module, onUpdateModule]);
+
+  // Check if pretest section needs to be marked complete
+  useEffect(() => {
+    if (localStorage.getItem('pretest1-section-complete') === 'true') {
+      handleSectionComplete(1);
+      localStorage.removeItem('pretest1-section-complete');
+    }
+  }, []);
 
   const handleSectionComplete = (sectionId: number) => {
     const updatedModule = { ...module };

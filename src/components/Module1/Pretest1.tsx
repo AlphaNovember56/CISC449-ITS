@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Card, Alert, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Question } from '../../types';
+
 import '../styles/Pretest.css';
 
 interface Pretest1Props {
@@ -70,6 +71,7 @@ export function Pretest1({ module1, questions, onComplete }: Pretest1Props) {
       
       // Call the completion handler with final values
       onComplete(finalScore, finalCorrectCount);
+
       
       // Log for debugging
       console.log(`Pretest complete - Stored ${finalCorrectCount} correct answers to localStorage`);
