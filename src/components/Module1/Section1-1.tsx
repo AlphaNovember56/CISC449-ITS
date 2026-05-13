@@ -27,6 +27,7 @@ export function Section1Part1({ moduleId, questions, pretestCorrectAnswers, onSe
   const [isCorrect, setIsCorrect] = useState(false);
   const [score, setScore] = useState(0);
   const [totalAttempts, setTotalAttempts] = useState(0);
+  const [correctAnswerCount, setCorrectAnswerCount] = useState(0);
   const [performanceFactorParams, setPerformanceFactorParams] = useState<PerformanceFactorParams | null>(null);
   const [quizStarted, setQuizStarted] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -139,10 +140,9 @@ export function Section1Part1({ moduleId, questions, pretestCorrectAnswers, onSe
     }
 
     setTotalAttempts(newAttempts);
-    
-    // Update score if answer was correct
+
     if (isCorrect) {
-      setScore(updatedCorrectCount);
+      setCorrectAnswerCount(updatedCorrectCount);
     }
 
     // Update performance factor params
@@ -202,7 +202,7 @@ export function Section1Part1({ moduleId, questions, pretestCorrectAnswers, onSe
               </Alert>
 
               <div className="completion-stats mb-4">
-                <p><strong>Correct Answers:</strong> {score}</p>
+                <p><strong>Correct Answers:</strong> {correctAnswerCount}</p>
                 <p><strong>Total Attempts:</strong> {totalAttempts}</p>
                 <p><strong>Final Probability of Success:</strong> {(performanceFactorParams.probabilityOfSuccess * 100).toFixed(1)}%</p>
                 <p><strong>Final Beta Value:</strong> {performanceFactorParams.currentBetaValue.toFixed(3)}</p>
